@@ -7,6 +7,15 @@ class Runner {
        this.testFiles = [];
    } 
 
+   async runTests() {
+       for (let file of this.testFiles) {
+           //when we require the file, node will find the file
+           //and run the code inside of it
+           require(file.name);
+
+       }
+   }
+
    async collectFiles(targetPath) {
        //this reads the files and folders in the given directory and 
        //saves their names to an array of strings
@@ -38,8 +47,6 @@ class Runner {
                files.push(...childFiles.map(f => path.join(file, f)));
            }
        }
-       console.log(files);
-       console.log(this.testFiles);
    }
 }
 

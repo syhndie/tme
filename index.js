@@ -7,8 +7,8 @@ const runner = new Runner();
 
 const run = async () => {
     //run the collectFiles method on the current working directory
-    const results = await runner.collectFiles(process.cwd());
-    
+    await runner.collectFiles(process.cwd());
+    runner.runTests();    
 }
 
 run();
