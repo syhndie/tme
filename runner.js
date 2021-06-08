@@ -9,6 +9,27 @@ class Runner {
 
    async runTests() {
        for (let file of this.testFiles) {
+           //create an array to store beforeEach functions
+           const beforeEaches = [];
+
+           //define the beforeEach and  it functions glabally 
+           //so we can use them for all of our tests
+           //this is using the same logic used by mocha
+           global.beforeEach = (fn) => {
+               //pass beforeEach a function and store that
+               //function in the beforeEaches array
+               beforeEaches.push(fn);
+           };
+           global.it = (desc, fn) => {
+               //whenever we run the it function, the first thing
+               //we do is run all the beforeEach functions in our
+               //beforeEaches array
+               beforeEaches.forEach(func => func());
+
+               //then we run whatever function we have passed in 
+               //to the it method
+               fn();
+           };
            //when we require the file, node will find the file
            //and run the code inside of it
            require(file.name);
