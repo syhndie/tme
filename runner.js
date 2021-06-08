@@ -28,12 +28,23 @@ class Runner {
 
                //then we run whatever function we have passed in 
                //to the it method
-               fn();
+               try {
+                fn();
+                console.log(`OK - ${desc}`);
+               } catch (err) {
+                    console.log(`X - ${desc}`);
+                    console.log('\t',err.message);
+               }
            };
            //when we require the file, node will find the file
            //and run the code inside of it
-           require(file.name);
-
+           //wrap the require statement in a try-catch in case
+           //the file is broken and crashes the testing
+           try {
+            require(file.name);
+           } catch (err) {
+               console.log(err);
+           }
        }
    }
 
