@@ -1,6 +1,7 @@
 //fs module from the node standard library
 const fs = require('fs');
 const path = require('path');
+const chalk = require('chalk');
 
 class Runner {
    constructor() {
@@ -9,6 +10,7 @@ class Runner {
 
    async runTests() {
        for (let file of this.testFiles) {
+           console.log(chalk.gray(`---- ${file.shortName}`))
            //create an array to store beforeEach functions
            const beforeEaches = [];
 
@@ -30,10 +32,14 @@ class Runner {
                //to the it method
                try {
                 fn();
-                console.log(`OK - ${desc}`);
+                console.log(chalk.greenBright(`\tOK - ${desc}`));
                } catch (err) {
-                    console.log(`X - ${desc}`);
-                    console.log('\t',err.message);
+                   //take the error message, globally in the string, replace
+                   //every new line character (\n) with new line and two tab 
+                   //characters (\n\t\t)
+                   const message = err.message.replace(/\n/g, '\n\t\t');
+                   console.log(chalk.red(`\tX - ${desc}`));
+                   console.log(chalk.red('\t', message));
                }
            };
            //when we require the file, node will find the file
@@ -43,7 +49,7 @@ class Runner {
            try {
             require(file.name);
            } catch (err) {
-               console.log(err);
+               console.log(chalk.red(err));
            }
        }
    }
@@ -65,7 +71,7 @@ class Runner {
             //if it is a file with '.test.js', we add an object 
             //to the end of the test files array
            if (stats.isFile() && file.includes('.test.js')) {
-               this.testFiles.push({ name: filepath });
+               this.testFiles.push({ name: filepath, shortName: file });
            } else if (stats.isDirectory()) {
                //if it is a directory we read the files and folders in it 
                //and save the names to an array
