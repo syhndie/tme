@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
 
+const forbiddenDirs = ['nodel_modules'];
+
 class Runner {
    constructor() {
        this.testFiles = [];
@@ -72,7 +74,7 @@ class Runner {
             //to the end of the test files array
            if (stats.isFile() && file.includes('.test.js')) {
                this.testFiles.push({ name: filepath, shortName: file });
-           } else if (stats.isDirectory()) {
+           } else if (stats.isDirectory() && !forbiddenDirs.includes(file)) {
                //if it is a directory we read the files and folders in it 
                //and save the names to an array
                const childFiles = await fs.promises.readdir(filepath);
