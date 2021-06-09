@@ -1,4 +1,4 @@
-//fs module from the node standard library
+//fs and path modules from the node standard library
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
