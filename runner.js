@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
+const render = require('./render');
 
 const forbiddenDirs = ['nodel_modules'];
 
@@ -16,15 +17,15 @@ class Runner {
            //create an array to store beforeEach functions
            const beforeEaches = [];
 
-           //define the beforeEach and  it functions glabally 
+           //define the render, beforeEach, and it functions glabally 
            //so we can use them for all of our tests
-           //this is using the same logic used by mocha
+           global.render = render;
            global.beforeEach = (fn) => {
                //pass beforeEach a function and store that
                //function in the beforeEaches array
                beforeEaches.push(fn);
            };
-           global.it = (desc, fn) => {
+           global.it = async (desc, fn) => {
                //whenever we run the it function, the first thing
                //we do is run all the beforeEach functions in our
                //beforeEaches array
@@ -33,7 +34,7 @@ class Runner {
                //then we run whatever function we have passed in 
                //to the it method
                try {
-                fn();
+                await fn();
                 console.log(chalk.greenBright(`\tOK - ${desc}`));
                } catch (err) {
                    //take the error message, globally in the string, replace
